@@ -28,8 +28,8 @@ So here it comes:
 
 Problem
 ---
-We have an (anonymous) function `f` that we'd like to be able to call
-recursively, without explicit self-reference.
+We have an anonymous function `f` that we'd like to be able to call recursively,
+without explicit self-reference.
 
 ```clojure
 (def f (fn [x] (... point-of-recursion-somewhere-in-body ...)))
@@ -43,10 +43,11 @@ version of the Y combinator, commonly called the Z combinator - the subtle
 difference will be addressed later. 
 
 `Z` will take `f-maker`, a wrapped version of `f` (or constructor for `f`, if
-you like), that uses its _argument_ at the point of recursion. So ultimately it
-expects _itself_ as argument - on how that can be done in a recursive situation
-without "manually" feeding the function, writing out endless chains of nested
-calls, see the rest.
+you like), that calls its _argument_ - a bound variable, that's perfectly OK -
+at the point of recursion. Now the trick waiting to be performed by us is
+passing the function _itself_ as argument somehow - on how that can be done in a
+recursive situation without "manually" feeding the function, writing out endless
+chains of nested calls, see the rest.
 
 ```clojure
 (def f-maker (fn [self]
@@ -82,15 +83,14 @@ needed – and so on...
 
 And that's pretty much it.
 
-The "real" Y combinator
+The Y combinator
 ---
-
 The Y combinator is the same as the Z combinator, except that it does not wrap
-the `(self-apply self)` call (whose result is then passed to `f-maker`) in a
-lambda. This only works in lazy languages though, like Haskell, where functions
-evaluate their arguments only when needed, and not before executing the body.
-Otherwise we'd be stuck in an infinite recursion - `(self-apply self)` would
-expand forever after the first call.
+the `(self-apply self)` call (that is to be passed to `f-maker`) in a lambda,
+conveniently delaying evaluation. This only works in lazy languages though, like
+Haskell, where functions evaluate their arguments only when needed, and not
+before executing the body. Otherwise we'd be stuck in an infinite recursion -
+`(self-apply self)` would expand forever after the first call.
 
 ```clojure
 (def Y (fn [f-maker]
@@ -100,12 +100,13 @@ expand forever after the first call.
 
 A biological allegory
 ---
-The Y and Z combinators work a bit like loading the "genetic code" of a
-function into the function itself. The following analogy might sound weird, but
-I find it extremely illuminating: `Z` is like an ovum, `f-maker` is the sperm,
-while the child, `self-replicating-f`, is a curious organism that has the
-genetic information of both parents, but can reproduce itself without needing
-another individual. This is _not_ asexual reproduction, however: the child and
-its subsequent children are able to reproduce by _making an insemination happen
-inside themselves_. A bit of a mindfuck, yeah.
+The Y and Z combinators work a bit like loading the "genetic code" of a function
+into the function itself. The following analogy might sound weird, but I find it
+extremely illuminating: `Z` (the "incubating" function) is like an ovum,
+`f-maker` (the argument) is the sperm, while the child, `self-replicating-f`
+(the return value), is a curious organism that has the genetic information of
+both parents, but can reproduce itself without needing another individual. This
+is _not_ asexual reproduction, however: the child and its subsequent children
+from then on are able to reproduce by _making an insemination happen inside
+themselves_. A bit of a mindfuck, yeah.
 
