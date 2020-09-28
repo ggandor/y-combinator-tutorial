@@ -104,9 +104,8 @@ The Y and Z combinators work a bit like loading the "genetic code" of a function
 into the function itself. The following analogy might sound weird, but I find it
 extremely illuminating: `Z` (the "incubating" function) is like an ovum,
 `f-maker` (the argument) is the sperm, while the child, `self-replicating-f`
-(the return value), is a curious organism that has the genetic information of
-both parents, but can reproduce itself without needing another individual. This
-is _not_ asexual reproduction, however: the child and its subsequent children
-from then on are able to reproduce by _making an insemination happen inside
-themselves_. A bit of a mindfuck, yeah.
+(the return value), and all its subsequent children are curious organisms that
+contain the genetic information of both of the original parents, but from then
+on can reproduce themselves without needing another individual. A bit of a
+mindfuck, yeah.
 
