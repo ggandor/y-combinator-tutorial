@@ -32,7 +32,7 @@ We have an (anonymous) function `f` that we'd like to be able to call
 recursively, without explicit self-reference.
 
 ```clojure
-(def f (fn [x] (... point-of-recursion-somewhere-in-body ...))
+(def f (fn [x] (... point-of-recursion-somewhere-in-body ...)))
 ```
 
 Solution
