@@ -51,14 +51,20 @@ chains of nested calls, see the rest.
 
 ```clojure
 (def f-maker (fn [self]
-               (fn [x] (... will call the provided self argument
+               (fn [x] (... will call the provided `self` argument
                             at the point of recursion ...))))
 ```
 
-A helper function making the Z combinator code easier to read: `self-apply` is
-simply `(fn [x] (x x))`. This is the so-called U combinator by the way.
-
 And now, the magic function:
+
+```clojure
+(def Z (fn [f-maker]
+         ((fn [self] (f-maker #((self self) %)))
+          (fn [self] (f-maker #((self self) %))))))
+```
+
+A helper function that might make it easier to read: `self-apply` is simply
+`(fn [x] (x x))`. This is the so-called U combinator by the way.
 
 ```clojure
 (def Z (fn [f-maker]
@@ -66,12 +72,12 @@ And now, the magic function:
                        (f-maker #((self-apply self) %))))))
 ```
 
-The important thing to note here is that the `(self-apply self)` call inside
-will expand to the body of `Z` itself, _the very form with which we have
-started_. That is, `Z` calls `f-maker` with its - `Z`'s - own body, loading it
-into the resulting function. This is a - probably _the_ - key step to understand
-here - the rest follows pretty trivially. If the "why" is not clear yet, just
-walk through the substitutions step by step; it is a crucial exercise.
+The important thing to note above is that the `(self-apply self)` form inside,
+when called, will expand to the body of `Z` itself, _the very form with which we
+have started_. That is, `Z` calls `f-maker` with its - `Z`'s - own body, loading
+it into the resulting function. This is a - probably _the_ - key step to
+understand here - the rest follows pretty trivially. If the "why" is not clear
+yet, just walk through the substitutions step by step; it is a crucial exercise.
 
 In the end, this results in returning a version of `f` (let it be
 `self-replicating-f`) that has the same body as `f`, except that at the point of
