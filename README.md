@@ -1,29 +1,22 @@
 Y combinator: A very short explanation
 ===
 
-The following aims to be the most distilled explanation of the Y combinator I
-could possibly come up with, that - according to my hopes - still remains
-comprehensible.
-
-This is not a bottom-up derivation, but a _top-down_ explanation: I will just
-show the solution to the problem, and then explain _why_ it works, and what is
-the idea behind it.
-
-You might want to read or skim
+The following is the most distilled top-down explanation of the famous Y
+combinator I could possibly come up with, that - according to my hopes - still
+remains comprehensible. You might want to read this either as a warm-up before
+diving deeper, or after reading
 [one](http://blog.tomtung.com/2012/10/yet-another-y-combinator-tutorial/) or
 [two](https://www.cs.toronto.edu/~david/courses/csc324_w15/extra/ycomb.html)
-other, more verbose tutorials in the former category before reading this - if
-you're on the verge of grokking, however, this might be the one that finally
-clicks everything into place. Or you can do it the other way around, and read
-this as a warm-up before diving deeper. I expect you to already have some
-understanding of lambda calculus and functional programming in general though -
-we're not starting from scratch here.
+more verbose tutorials with a bottom-up approach, if the concept hasn't quite
+clicked yet.
 
-The code uses [Clojure](https://clojure.org/) syntax - the only thing that
-should not be instantly comprehensible for Lispers is the following built-in
-macro: `#(foo %)` is an alternative syntax for denoting a lambda, the same as
-`(fn [x] (foo x))`, with `%` representing the place of the (first or only)
-function argument in the body.
+The code itself is in [Clojure](https://clojure.org/), a Lisp dialect - the only
+thing that should not be instantly comprehensible for Lispers is the following
+built-in macro: `#(foo %)` is an alternative syntax for denoting a lambda, the
+same as `(fn [x] (foo x))`, with `%` representing the place of the (first or
+only) function argument in the body. I will use that form to denote those
+lambdas that are really just redundant wrappers, serving no other purpose than
+to delay the evaluation of their wrapped expression.
 
 So here it comes:
 
