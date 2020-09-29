@@ -19,10 +19,11 @@ this as a warm-up before diving deeper. I expect you to already have some
 understanding of lambda calculus and functional programming in general though -
 we're not starting from scratch here.
 
-The code uses Clojure syntax - the only thing that should not be instantly
-comprehensible for Lispers is the following built-in macro: `#(foo %)` is an
-alternative syntax for denoting a lambda, the same as `(fn [x] (foo x))`, with
-`%` representing the place of the (first or only) function argument in the body.
+The code uses [Clojure](https://clojure.org/) syntax - the only thing that
+should not be instantly comprehensible for Lispers is the following built-in
+macro: `#(foo %)` is an alternative syntax for denoting a lambda, the same as
+`(fn [x] (foo x))`, with `%` representing the place of the (first or only)
+function argument in the body.
 
 So here it comes:
 
