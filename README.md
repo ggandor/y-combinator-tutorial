@@ -38,10 +38,10 @@ without explicit self-reference.
 
 Solution
 ---
-With the Y combinator, we can _create_ a modified version of `f` that is able to
-recurse without knowing its own name. I will first show the so-called strict
-version of the Y combinator, commonly called the Z combinator - the subtle
-difference will be addressed later. 
+With the **Y combinator**, we can _create_ a modified version of `f` that is
+able to recurse without knowing its own name. I will first show the so-called
+strict version of the Y combinator, commonly called the **Z combinator** - the
+subtle difference will be addressed later. 
 
 `Z` will take `f-maker`, a wrapped version of `f` (or constructor for `f`, if
 you like), that calls its _argument_ - a bound variable, that's perfectly OK -
