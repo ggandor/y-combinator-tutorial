@@ -9,15 +9,15 @@ This is not a bottom-up derivation, but a _top-down_ explanation: I will just
 show the solution to the problem, and then explain _why_ it works, and what is
 the idea behind it.
 
-You might want to read
+You might want to read or skim
 [one](http://blog.tomtung.com/2012/10/yet-another-y-combinator-tutorial/) or
 [two](https://www.cs.toronto.edu/~david/courses/csc324_w15/extra/ycomb.html)
-other, more verbose tutorials in the former category before reading this one. If
-you're just on the verge of grokking, however, this might be the final push that
+other, more verbose tutorials in the former category before reading this - if
+you're on the verge of grokking, however, this might be the one that finally
 clicks everything into place. Or you can do it the other way around, and read
-this as a warm-up - however you like it. I expect you to already have at least
-some understanding of lambda calculus and functional programming in general
-though.
+this as a warm-up before diving deeper. I expect you to already have some
+understanding of lambda calculus and functional programming in general though -
+we're not starting from scratch here.
 
 The code uses Clojure syntax - the only thing that should not be instantly
 comprehensible for Lispers is the following built-in macro: `#(foo %)` is an
