@@ -68,29 +68,29 @@ A helper function that might make it easier to read: `self-apply` is simply
 
 The important thing to note above is that the `(self-apply self)` form inside,
 when called, will expand to the body of `Z` itself, _the very form with which we
-have started_. That is, `Z` calls `f-maker` with its - `Z`'s - own body, loading
-it into the resulting function. This is a - probably _the_ - key step to
+have started_. That is, `Z` calls `f-maker` with `Z`'s own body, and _loads it
+into the resulting function_. This is a - probably _the_ - key step to
 understand here - the rest follows pretty trivially. If the "why" is not clear
 yet, just walk through the substitutions step by step; it is a crucial exercise.
 
-In the end, this results in returning a version of `f` (let it be
+In the end, this results in returning a version of our original `f` (let it be
 `self-replicating-f`) that has the same body as `f`, except that at the point of
-recursion, it has _the body of_ `Z`_, with_ `f-maker` _already bound_,
-burnt-in. It's easy to see that calling that expression at the point of
-recursion will ultimately return `self-replicating-f` again, that otherwise
-works just like `f`, but can get itself returned at the point of recursion if
-needed – and so on...
+recursion, it has the body of `Z`_, with_ `f-maker` _already bound_, burnt-in.
+It's easy to see that calling that expression at the point of recursion will
+ultimately return `self-replicating-f` again, that otherwise works just like
+`f`, but can get itself returned at the point of recursion if needed – and so
+on...
 
 And that's pretty much it.
 
 The Y combinator
 ---
 The Y combinator is the same as the Z combinator, except that it does not wrap
-the `(self-apply self)` call (that is to be passed to `f-maker`) in a lambda,
-conveniently delaying evaluation. This only works in lazy languages though, like
-Haskell, where functions evaluate their arguments only when needed, and not
-before executing the body. Otherwise we'd be stuck in an infinite recursion -
-`(self-apply self)` would expand forever after the first call.
+the `(self-apply self)` call in a lambda, conveniently delaying evaluation. This
+only works in lazy languages though, like Haskell, where functions evaluate
+their arguments only when needed, and not before executing the body. Otherwise
+we'd be stuck in an infinite recursion - `(self-apply self)` would expand
+forever after the first call, before it could be passed on to `f-maker`.
 
 ```clojure
 (def Y (fn [f-maker]
