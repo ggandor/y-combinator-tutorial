@@ -84,6 +84,10 @@ ultimately return `self-replicating-f` again, that otherwise works just like
 `f`, but can get itself returned at the point of recursion if needed – and so
 on...
 
+```clojure
+(def self-replicating-f (Z f-maker))
+```
+
 And that's pretty much it.
 
 The Y combinator
