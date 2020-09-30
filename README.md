@@ -23,7 +23,7 @@ So here it comes:
 Problem
 ---
 We have an anonymous function `f` that we'd like to be able to call recursively,
-without explicit self-reference.
+without self-reference.
 
 ```clojure
 (def f (fn [x] (... point-of-recursion-somewhere-in-body ...)))
@@ -37,16 +37,19 @@ strict version of the Y combinator, commonly called the **Z combinator** - the
 subtle difference will be addressed later. 
 
 `Z` will take `f-maker`, a wrapped version of `f` (or constructor for `f`, if
-you like), that calls its _argument_ - a bound variable, that's perfectly OK -
-at the point of recursion. Now the trick waiting to be performed by us is
-passing the function _itself_ as argument somehow - on how that can be done in a
-recursive situation without "manually" feeding the function, writing out endless
-chains of nested calls, see the rest.
+you like), that makes `f` call the provided _argument_ - a bound variable,
+that's perfectly OK - at the point of recursion. Now the trick waiting to be
+performed by us is passing this new kind of `f` _itself_ as argument to
+`f-maker` somehow. On how that can be achieved in an indefinite recursive
+situation, without manually feeding `f-maker` with an `f` that is created by an
+`f-maker` taking an `f` that is created by... and so on, that is, writing out an
+unfinishable chain of nested calls, see the rest.
 
 ```clojure
-(def f-maker (fn [self]
-               (fn [x] (... will call the provided `self` argument
-                            at the point of recursion ...))))
+(def f-maker (fn [f-self]
+               ;; Spoiler: this will be a clever, "self-replicating" version
+               ;; of `f`, if provided with the right `f-self` argument.
+               (fn [x] (... call `f-self` at the point of recursion ...))))
 ```
 
 And now, the magic function:
