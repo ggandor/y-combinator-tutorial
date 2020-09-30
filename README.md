@@ -77,12 +77,12 @@ understand here - the rest follows pretty trivially. If the "why" is not clear
 yet, just walk through the substitutions step by step; it is a crucial exercise.
 
 In the end, this results in returning a version of our original `f` (let it be
-`self-replicating-f`) that has the same body as `f`, except that at the point of
-recursion, it has the body of `Z`_, with_ `f-maker` _already bound_, burnt-in.
-It's easy to see that calling that expression at the point of recursion will
-ultimately return `self-replicating-f` again, that otherwise works just like
-`f`, but can get itself returned at the point of recursion if needed – and so
-on...
+`self-replicating-f`) that has the same body as `f`, except that it has the
+means to recreate itself on demand: at the point of recursion, it has the body
+of `Z`_, with_ `f-maker` _already bound_, burnt-in.  It's easy to see that
+calling that expression at the point of recursion will ultimately return
+`self-replicating-f` again, that otherwise works just like `f`, but can get
+itself returned at the point of recursion if needed – and so on...
 
 ```clojure
 (def self-replicating-f (Z f-maker))
@@ -107,12 +107,12 @@ forever after the first call, before it could be passed on to `f-maker`.
 
 A biological allegory
 ---
-The Y and Z combinators work a bit like loading the "genetic code" of a function
-into the function itself. The following analogy might sound weird, but I find it
-extremely illuminating: `Z` (the "incubating" function) is like an ovum,
-`f-maker` (the argument) is the sperm, while the child, `self-replicating-f`
-(the return value), and all its subsequent children are curious organisms that
-contain the genetic information of both of the original parents, but from then
-on can reproduce themselves without needing another individual. A bit of a
-mindfuck, yeah.
+The Y and Z combinators work a bit like loading the "genetic blueprint" of a
+function into the function itself. The following analogy might sound weird, but
+I find it extremely illuminating: `Z` (the "incubating" function) is like an
+ovum, `f-maker` (the argument) is the sperm, while the child,
+`self-replicating-f` (the return value), and all its subsequent children are
+curious organisms that contain the full genetic information of both of the
+original parents, and from then on can reproduce themselves without needing
+another individual. A bit of a mindfuck, yeah.
 
