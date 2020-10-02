@@ -52,7 +52,7 @@ unfinishable chain of nested calls, see the rest.
                ;; Spoiler: this will be a clever, "self-replicating" version
                ;; of `f`, if provided with the right `f-self` argument.
                (fn [x] (
-                 ;; call `f-self` at the point of recursion
+                 ;; call the provided `f-self` at the point of recursion
                ))))
 ```
 
@@ -87,15 +87,16 @@ of `Z`_, with_ `f-maker` _already bound_, burnt-in. It will look something like
 this:
 
 ```clojure
+;; self-replicating-f
 (fn [x] (
   ;; call `#((self-apply self) %)` at the point of recursion
 ))
 ```
 
-It's easy to see that calling that expression will ultimately return this
-`self-replicating-f` again (since that is what `Z` does), that otherwise works
-just like `f`, but can get itself returned at the point of recursion if needed –
-and so on...
+It's easy to see that calling that expression will pass the given agument to
+`(self-apply self)`, that ultimately reduces to `self-replicating-f` again
+(since that is what `Z` does), a function that otherwise works just like `f`,
+but can get itself returned at the point of recursion if needed – and so on...
 
 ```clojure
 (def self-replicating-f (Z f-maker))
