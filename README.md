@@ -1,10 +1,10 @@
 Y combinator: A very short explanation
 ===
 
-The following is the most distilled top-down explanation of the famous Y
-combinator I could possibly come up with, that - according to my hopes - still
-remains comprehensible. You might want to read this either as a warm-up before
-diving deeper, or after reading
+The following is the most distilled top-down explanation of the Y combinator I
+could possibly come up with, that - according to my hopes - still remains
+comprehensible. You might want to read this either as a warm-up before diving
+deeper, or after reading
 [one](http://blog.tomtung.com/2012/10/yet-another-y-combinator-tutorial/) or
 [two](https://www.cs.toronto.edu/~david/courses/csc324_w15/extra/ycomb.html)
 more verbose tutorials with a bottom-up approach, if the concept hasn't quite
@@ -23,7 +23,7 @@ So here it comes:
 Problem
 ---
 We have an anonymous function `f` that we'd like to be able to call recursively,
-without self-reference.
+without explicit self-reference.
 
 ```clojure
 (def f (fn [x] (... point-of-recursion-somewhere-in-body ...)))
@@ -61,7 +61,7 @@ And now, the magic function:
 ```
 
 A helper function that might make it easier to read: `self-apply` is simply
-`(fn [x] (x x))`. This is the so-called U combinator by the way.
+`(fn [x] (x x))`. (This is the so-called U combinator by the way.)
 
 ```clojure
 (def Z (fn [f-maker]
@@ -81,8 +81,9 @@ In the end, this results in returning a version of our original `f` (let it be
 means to recreate itself on demand: at the point of recursion, it has the body
 of `Z`_, with_ `f-maker` _already bound_, burnt-in.  It's easy to see that
 calling that expression at the point of recursion will ultimately return
-`self-replicating-f` again, that otherwise works just like `f`, but can get
-itself returned at the point of recursion if needed – and so on...
+`self-replicating-f` again (since that is what `Z` does), that otherwise works
+just like `f`, but can get itself returned at the point of recursion if needed –
+and so on...
 
 ```clojure
 (def self-replicating-f (Z f-maker))
