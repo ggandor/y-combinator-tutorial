@@ -104,16 +104,3 @@ forever after the first call, before it could be passed on to `f-maker`.
          (self-apply (fn [self]
                        (f-maker (self-apply self))))))
 ```
-
-A biological allegory
----
-The Y and Z combinators work a bit like loading the "genetic blueprint" of a
-function into the function itself. The following analogy might sound weird at
-first, but I find it extremely illuminating: `Z` (the incubating function) is
-like an ovum, `f-maker` (the argument) is the sperm, while the child,
-`self-replicating-f` (the return value) is a curious organism that will contain
-an already fertilized ovum (i.e. a zygote) inside, the exact genetic copy of the
-one from which it was born. The child and all its subsequent children from then
-on can thus reproduce without needing another individual. A bit of a mindfuck,
-yeah.
-
