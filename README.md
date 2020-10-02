@@ -26,7 +26,9 @@ We have an anonymous function `f` that we'd like to be able to call recursively,
 without explicit self-reference.
 
 ```clojure
-(def f (fn [x] (... point-of-recursion-somewhere-in-body ...)))
+(def f (fn [x] (
+         ;; point of recursion somewhere in body
+       )))
 ```
 
 Solution
@@ -49,7 +51,9 @@ unfinishable chain of nested calls, see the rest.
 (def f-maker (fn [f-self]
                ;; Spoiler: this will be a clever, "self-replicating" version
                ;; of `f`, if provided with the right `f-self` argument.
-               (fn [x] (... call `f-self` at the point of recursion ...))))
+               (fn [x] (
+                 ;; call `f-self` at the point of recursion
+               ))))
 ```
 
 And now, the magic function:
@@ -83,7 +87,9 @@ of `Z`_, with_ `f-maker` _already bound_, burnt-in. It will look something like
 this:
 
 ```clojure
-(fn [x] (... call `#((self-apply self) %)` at the point of recursion ...))
+(fn [x] (
+  ;; call `#((self-apply self) %)` at the point of recursion
+))
 ```
 
 It's easy to see that calling that expression will ultimately return this
