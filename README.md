@@ -79,8 +79,14 @@ yet, just walk through the substitutions step by step; it is a crucial exercise.
 In the end, this results in returning a version of our original `f` (let it be
 `self-replicating-f`) that has the same body as `f`, except that it has the
 means to recreate itself on demand: at the point of recursion, it has the body
-of `Z`_, with_ `f-maker` _already bound_, burnt-in.  It's easy to see that
-calling that expression at the point of recursion will ultimately return
+of `Z`_, with_ `f-maker` _already bound_, burnt-in. It will look something like
+this:
+
+```clojure
+(fn [x] (... call `#((self-apply self) %)` at the point of recursion ...))
+```
+
+It's easy to see that calling that expression will ultimately return this
 `self-replicating-f` again (since that is what `Z` does), that otherwise works
 just like `f`, but can get itself returned at the point of recursion if needed –
 and so on...
