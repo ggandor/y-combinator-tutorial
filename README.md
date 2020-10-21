@@ -23,7 +23,7 @@ So here it comes:
 Problem
 ---
 We have an anonymous function `f` that we'd like to be able to call recursively,
-without explicit self-reference.
+without the means of explicit self-reference.
 
 ```clojure
 (def f (fn [x] (
@@ -33,19 +33,16 @@ without explicit self-reference.
 
 Solution
 ---
-With the **Y combinator**, we can _create_ a modified version of `f` that is
-able to recurse without knowing its own name. I will first show the so-called
-strict version of the Y combinator, commonly called the **Z combinator** - the
-subtle difference will be addressed later. 
+The **Y combinator** is a clever function that can _create_ a modified version
+of `f` that is able to recurse without knowing its own name. I will first show
+the so-called strict version of the Y combinator, commonly called the **Z
+combinator** - the subtle difference will be addressed later. 
 
-`Z` will take `f-maker`, a wrapped version of `f` (or constructor for `f`, if
-you like), that makes `f` call the provided _argument_ - a bound variable,
-that's perfectly OK - at the point of recursion. Now the trick waiting to be
-performed by us is passing this new kind of `f` _itself_ as argument to
-`f-maker` somehow. On how that can be achieved in an indefinite recursive
-situation, without manually feeding `f-maker` with an `f` that is created by an
-`f-maker` taking an `f` that is created by... and so on, that is, writing out an
-unfinishable chain of nested calls, see the rest.
+As a preliminary step, we need to move the self-reference out from the function
+`f`. That is, `Z` does not take the original function, but expects a wrapped
+version of `f` (a constructor for `f`, if you like), that makes `f` call the
+provided _argument_ - a bound variable, that's perfectly OK - at the point of
+recursion. Let's call that `f-maker`:
 
 ```clojure
 (def f-maker (fn [f-self]
@@ -56,7 +53,13 @@ unfinishable chain of nested calls, see the rest.
                ))))
 ```
 
-And now, the magic function:
+Now the trick waiting to be performed by us is passing this new kind of `f`
+_itself_ as argument to `f-maker` somehow. On how that can be achieved in an
+indefinite recursive situation, without manually feeding `f-maker` with an `f`
+that is created by an `f-maker` taking an `f` that is created by... and so on,
+that is, writing out an unfinishable chain of nested calls, see the rest.
+
+Without further ado, the magic function:
 
 ```clojure
 (def Z (fn [f-maker]
