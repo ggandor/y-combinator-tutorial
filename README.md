@@ -18,8 +18,6 @@ only) function argument in the body. I will use that form to denote those
 lambdas that are really just redundant wrappers, serving no other purpose than
 to delay the evaluation of their wrapped expression.
 
-So here it comes:
-
 Problem
 ---
 We have an anonymous function `f` that we'd like to be able to call recursively,
@@ -39,15 +37,16 @@ the so-called strict version of the Y combinator, commonly called the **Z
 combinator** - the subtle difference will be addressed later. 
 
 As a preliminary step, we need to move the self-reference out from the function
-`f`. That is, `Z` does not take the original function, but expects a wrapped
-version of `f` (a constructor for `f`, if you like), that makes `f` call the
-provided _argument_ - a bound variable, that's perfectly OK - at the point of
-recursion. Let's call that `f-maker`:
+`f`. That is, the Z combinator does not work on the original function, but
+expects a wrapped version of `f` (a maker for `f`, if you like), that returns an
+`f` that calls the maker's _argument_ - a bound variable in the enclosing scope,
+that's perfectly OK - at the point of recursion.
 
 ```clojure
 (def f-maker (fn [f-self]
-               ;; Spoiler: this will be a clever, "self-replicating" version
-               ;; of `f`, if provided with the right `f-self` argument.
+               ;; Spoiler: the function returned here will be a clever,
+               ;; "self-replicating" version of our original `f`, if
+               ;; provided with the right `f-self` by the maker.
                (fn [x] (
                  ;; call the provided `f-self` at the point of recursion
                ))))
@@ -72,15 +71,15 @@ A helper function that might make it easier to read: `self-apply` is simply
 
 ```clojure
 (def Z (fn [f-maker]
-         (self-apply (fn [self]
-                       (f-maker #((self-apply self) %))))))
+         (self-apply
+           (fn [self] (f-maker #((self-apply self) %))))))
 ```
 
 The important thing to note above is that the `(self-apply self)` form inside,
 when called, will expand to the body of `Z` itself, _the very form with which we
 have started_. That is, `Z` calls `f-maker` with `Z`'s own body, and _loads it
 into the resulting function_. This is a - probably _the_ - key step to
-understand here - the rest follows pretty trivially. If the "why" is not clear
+understand here, the rest follows pretty trivially. If the "why" is not clear
 yet, just walk through the substitutions step by step; it is a crucial exercise.
 
 In the end, this results in returning a version of our original `f` (let it be
@@ -98,7 +97,7 @@ this:
 
 It's easy to see that calling that expression will pass the given agument to
 `(self-apply self)`, that ultimately reduces to `self-replicating-f` again
-(since that is what `Z` does), a function that otherwise works just like `f`,
+(since that is what `Z` returns), a function that otherwise works just like `f`,
 but can get itself returned at the point of recursion if needed – and so on...
 
 ```clojure
@@ -118,6 +117,6 @@ forever after the first call, before it could be passed on to `f-maker`.
 
 ```clojure
 (def Y (fn [f-maker]
-         (self-apply (fn [self]
-                       (f-maker (self-apply self))))))
+         (self-apply
+           (fn [self] (f-maker (self-apply self))))))
 ```
