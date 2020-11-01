@@ -31,9 +31,9 @@ without the means of explicit self-reference.
 
 Solution
 ---
-The **Y combinator** is a clever function that can _create_ a modified version
-of `f` that is able to recurse without knowing its own name. I will first show
-the so-called strict version of the Y combinator, commonly called the **Z
+The **Y combinator** is a clever function that can create a modified version of
+`f` that is able to recurse without knowing its own name. I will first show the
+so-called strict version of the Y combinator, commonly called the **Z
 combinator** - the subtle difference will be addressed later. 
 
 As a preliminary step, we need to move the self-reference out from the function
@@ -46,7 +46,7 @@ that's perfectly OK - at the point of recursion.
 (def f-maker (fn [f-self]
                ;; Spoiler: the function returned here will be a clever,
                ;; "self-replicating" version of our original `f`, if
-               ;; provided with the right `f-self` by the maker.
+               ;; provided with the right form of `f-self` by the maker.
                (fn [x] (
                  ;; call the provided `f-self` at the point of recursion
                ))))
@@ -66,8 +66,8 @@ Without further ado, the magic function:
           (fn [self] (f-maker #((self self) %))))))
 ```
 
-A helper function that might make it easier to read: `self-apply` is simply
-`(fn [x] (x x))`. (This is the so-called U combinator by the way.)
+A helper function that might make it easier to read: `self-apply` (alias U
+combinator) is simply `(fn [x] (x x))`.
 
 ```clojure
 (def Z (fn [f-maker]
@@ -77,34 +77,36 @@ A helper function that might make it easier to read: `self-apply` is simply
 
 The important thing to note above is that the `(self-apply self)` form inside,
 when called, will expand to the body of `Z` itself, _the very form with which we
-have started_. That is, `Z` calls `f-maker` with `Z`'s own body, and _loads it
-into the resulting function_. This is a - probably _the_ - key step to
-understand here, the rest follows pretty trivially. If the "why" is not clear
-yet, just walk through the substitutions step by step; it is a crucial exercise.
+have started_. That is, `Z` calls `f-maker` with a box containing `Z`'s own
+body, and thus _loads it into the resulting function_. This is a - probably the - 
+key step to understand here, the rest follows pretty trivially. If the "why"
+is not clear yet, just walk through the substitutions step by step; it is a
+crucial exercise.
 
-In the end, this results in returning a version of our original `f` (let it be
+In the end, this results in getting a version of our original `f` (let it be
 `self-replicating-f`) that has the same body as `f`, except that it has the
 means to recreate itself on demand: at the point of recursion, it has the body
-of `Z`_, with_ `f-maker` _already bound_, burnt-in. It will look something like
-this:
+of `Z`_, with_ `f-maker` _already bound_, boxed in, ready to be evaluated.
+
+Once that happens, i.e., when a recursive call is initiated in our supercharged
+`self-replicating-f`, the box opens, and the whole machinery inside starts
+moving again, with the body of `Z` - via calling `f-maker` - ultimately reducing
+itself to the same `self-replicating-f`, that is finally ready to take its
+argument (the one being passed in the recursive call) and execute.
 
 ```clojure
 ;; self-replicating-f
 (fn [x] (
-  ;; call `#((self-apply self) %)` at the point of recursion
+  ;; call `#((self-apply self) %)` i.e. `#(Z-body-with-f-maker-enclosed %)`
+  ;; i.e. `#(self-replicating-f %)` at the point of recursion
 ))
 ```
 
-It's easy to see that calling that expression will pass the given agument to
-`(self-apply self)`, that ultimately reduces to `self-replicating-f` again
-(since that is what `Z` returns), a function that otherwise works just like `f`,
-but can get itself returned at the point of recursion if needed – and so on...
+And that's pretty much it.
 
 ```clojure
 (def self-replicating-f (Z f-maker))
 ```
-
-And that's pretty much it.
 
 The Y combinator
 ---
