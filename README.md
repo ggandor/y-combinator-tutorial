@@ -122,3 +122,10 @@ forever after the first call, before it could be passed on to `f-maker`.
          (self-apply
            (fn [self] (f-maker (self-apply self))))))
 ```
+
+TODO
+---
+- [ ] Go through and summarize [McAdam's
+  paper](http://www.lfcs.inf.ed.ac.uk/reports/97/ECS-LFCS-97-375/) on the
+  practical applications of the concept.
+
