@@ -10,13 +10,18 @@ deeper, or after reading
 more verbose tutorials with a bottom-up approach, if the concept hasn't quite
 clicked yet.
 
-The code itself is in [Clojure](https://clojure.org/), a Lisp dialect - the only
-thing that should not be instantly comprehensible for Lispers is the following
-built-in macro: `#(foo %)` is an alternative syntax for denoting a lambda, the
-same as `(fn [x] (foo x))`, with `%` representing the place of the (first or
-only) function argument in the body. I will use that form to denote those
-lambdas that are really just redundant wrappers, serving no other purpose than
-to delay the evaluation of their wrapped expression.
+Caveat: being short does not mean that you can read faster than usual - in fact,
+exactly the opposite. The text is very dense, and every sentence is packed with
+a lot of information: be sure to take your time.
+
+The code itself is in [Clojure](https://clojure.org/), a popular modern Lisp
+dialect - the only thing that should not be instantly comprehensible for Lispers
+is the following built-in macro: `#(... %)` is an alternative syntax for
+denoting a lambda, the same as `(fn [x] (... x))` - Clojure's equivalent of
+`(lambda (x) (... x))` -, with `%` representing the place of the first or only
+function argument in the body.  I will use that form to denote those lambdas
+that are really just redundant wrappers, serving no other purpose than to delay
+the evaluation of their wrapped expression.
 
 Problem
 ---
